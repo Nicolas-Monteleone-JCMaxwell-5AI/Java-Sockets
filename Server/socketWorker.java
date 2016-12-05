@@ -12,6 +12,7 @@ import java.io.*;
  */
 class SocketWorker implements Runnable {
   private Socket client;
+  public String Nickname=null;
 
     //Constructor: inizializza le variabili
     SocketWorker(Socket client) {
@@ -32,16 +33,29 @@ class SocketWorker implements Runnable {
           System.out.println("Errore: in|out fallito");
           System.exit(-1);
         }
-
+        
         String line = "";
         int clientPort = client.getPort(); //il "nome" del mittente (client)
         while(line != null){
           try{
             line = in.readLine();
+            if(Nickname==null)
+            {
+                Nickname=line;
+            }else{
+                if(line.equals("Nickname")){
+                    System.out.println("Client list requested. Sent to: "+Nickname);
+                    for(int i=0;i<ServerTestoMultiThreaded.SocketList.size();i++)
+                    {
+                        out.println("Server-->" + Nickname + ">> " + ServerTestoMultiThreaded.SocketList.get(i).Nickname);
+                    }
+                }else{
             //Manda lo stesso messaggio appena ricevuto con in aggiunta il "nome" del client
-            out.println("Server-->" + clientPort + ">> " + line);
+                    out.println("Server-->" + Nickname + ">> " + line);
             //scrivi messaggio ricevuto su terminale
-            System.out.println(clientPort + ">> " + line);
+                    System.out.println(Nickname + ">> " + line);
+                    }
+                }
            } catch (IOException e) {
             System.out.println("lettura da socket fallito");
             System.exit(-1);
