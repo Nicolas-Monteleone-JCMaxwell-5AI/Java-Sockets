@@ -72,6 +72,11 @@ Mentre le modifiche descritte dai primi due punti risulteranno in una fusione (m
 ## Licenza
 opensource nel modo piu' completo del termine :) senza alcuna restrizione!
 
+##Patch Notes
+versione 1.1
+-Aggiunta la possibilità di inserire il propio nickname
+-Aggiunta la possibilità di vedere la lista degli utenti connessi
+
 ## Ringraziamenti
 a mia moglie che mi ha permesso di trovare il tempo per questo progetto guardando il bambino ;)
 ##Autori Rinaldi Brescia Monteleone
