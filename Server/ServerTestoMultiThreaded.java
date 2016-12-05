@@ -10,11 +10,12 @@
  */
 import java.net.*;
 import java.io.*;
+import java.util.*;
 
 public class ServerTestoMultiThreaded {
-
+static List<SocketWorker> SocketList = new ArrayList();
     public static void main(String[] args) {
-
+        
         if (args.length != 1) {
             System.out.println("Uso: java ServerTestoMultithreaded <Porta Server>");
             return;
@@ -32,6 +33,7 @@ public class ServerTestoMultiThreaded {
                 try {
                     //server.accept returns a client connection
                     w = new SocketWorker(server.accept());
+                    SocketList.add(w);
                     Thread t = new Thread(w);
                     t.start();
                 } catch (IOException e) {
