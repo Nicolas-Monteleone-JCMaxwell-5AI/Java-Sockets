@@ -20,11 +20,10 @@ public class ClientTesto {
     
     public static void main(String[] args) {
 	// verifica correttezza dei parametri
-	if (args.length != 2) {
+	if (args.length != 3) {
             System.out.println("Uso: java client-Testo <indirizzo IP Server> <Porta Server>");
             return;
-        }
-		
+        }	
 	String hostName = args[0];
 	int portNumber = Integer.parseInt(args[1]);
 	try {
@@ -47,7 +46,7 @@ public class ClientTesto {
 		
             // connessione al socket (in uscita client --> server)
             PrintWriter out =  new PrintWriter(clientSocket.getOutputStream(), true);
-			
+            out.println(args[2]);
             // connessione allo StdIn per inserire il testo dalla linea di comando
             BufferedReader stdIn = new BufferedReader(new InputStreamReader(System.in));
             String userInput;
