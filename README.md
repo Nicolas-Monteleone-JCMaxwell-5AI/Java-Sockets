@@ -16,9 +16,6 @@ Scarica i files del progetto cliccando "Clone/Download"
 
 * estrai i files e spostali nella sub-directory "src" dei rispettivi progetti (es. Documents\NetBeansProjects\Java-Sockets-Server\src)
 
-## Uso
-
-
 ### Esempio usando stesso computer sia per eseguire Server che multipli Clients
 Da finestra di comando esguire il Server:
 ```
