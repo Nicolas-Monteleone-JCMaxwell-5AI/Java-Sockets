@@ -13,6 +13,9 @@ import java.io.*;
 class SocketWorker implements Runnable {
   private Socket client;
   public String Nickname=null;
+  public String currentGroupChat="";
+  BufferedReader in = null;
+  PrintWriter out = null;
 
     //Constructor: inizializza le variabili
     SocketWorker(Socket client) {
@@ -22,9 +25,6 @@ class SocketWorker implements Runnable {
 
     // Questa e' la funzione che viene lanciata quando il nuovo "Thread" viene generato
     public void run(){
-        
-        BufferedReader in = null;
-        PrintWriter out = null;
         try{
           // connessione con il socket per ricevere (in) e mandare(out) il testo
           in = new BufferedReader(new InputStreamReader(client.getInputStream()));
@@ -43,29 +43,92 @@ class SocketWorker implements Runnable {
             {
                 Nickname=line;
             }else{
-                if(line.equals("Nickname")){
-                    System.out.println("Client list requested. Sent to: "+Nickname);
-                    for(int i=0;i<ServerTestoMultiThreaded.SocketList.size();i++)
-                    {
-                        out.println("Server-->" + Nickname + ">> " + ServerTestoMultiThreaded.SocketList.get(i).Nickname);
-                    }
-                }else{
-            //Manda lo stesso messaggio appena ricevuto con in aggiunta il "nome" del client
-                    out.println("Server-->" + Nickname + ">> " + line);
-            //scrivi messaggio ricevuto su terminale
-                    System.out.println(Nickname + ">> " + line);
-                    }
-                }
-           } catch (IOException e) {
-            System.out.println("lettura da socket fallito");
-            System.exit(-1);
+                manageCommand(line);
+            }
+           } catch (Exception e) {
+            System.out.println("Socket Disconnesso");
+            ServerTestoMultiThreaded.SocketList.remove(this);
+            try{
+            client.close();
+            }catch(IOException e2)
+            {}
+            
            }
         }
         try {
             client.close();
-            System.out.println("connessione con client: " + client + " terminata!");
+            System.out.println("connessione con client: " + Nickname + " terminata!");
         } catch (IOException e) {
             System.out.println("Errore connessione con client: " + client);
         }
+    }
+    
+    public void manageCommand(String line)
+    {
+        if(line.equals("/nickname")){
+            System.out.println("Client list requested. Sent to: "+Nickname);
+            for(int i=0;i<ServerTestoMultiThreaded.SocketList.size();i++)
+                {
+                    out.println("Server-->" + Nickname + ">> " + ServerTestoMultiThreaded.SocketList.get(i).Nickname);
+                }
+                return;
+            }
+        if(currentGroupChat.equals("")){
+            if(line.length()>5){
+            if(line.substring(0, 5).equals("/join"))
+            {
+                currentGroupChat = line.substring(6, line.length());
+                out.println("Joined to "+line.substring(6, line.length())+" successfully");
+                return;
+            }
+            }
+            //Manda lo stesso messaggio appena ricevuto con in aggiunta il "nome" del client
+            out.println("Server-->" + Nickname + ">> " + line);
+            //scrivi messaggio ricevuto su terminale
+            System.out.println(Nickname + ">> " + line);
+        }
+        else
+        {
+            if(line.equals("/quit"))
+            {
+                currentGroupChat="";
+                return;
+            }
+            if(line.contains("/invite"))
+            {
+                String nickname = line.substring(8,line.length());
+                for(int i=0;i<ServerTestoMultiThreaded.SocketList.size();i++)
+                {
+                    if(!ServerTestoMultiThreaded.SocketList.get(i).Nickname.equals(Nickname))
+                    {
+                        if(!ServerTestoMultiThreaded.SocketList.get(i).currentGroupChat.equals(currentGroupChat) && ServerTestoMultiThreaded.SocketList.get(i).currentGroupChat.equals("")){
+                        ServerTestoMultiThreaded.SocketList.get(i).currentGroupChat = currentGroupChat;
+                        ServerTestoMultiThreaded.SocketList.get(i).sendMessage("You joined "+currentGroupChat);
+                        }
+                        else
+                        {
+                        sendMessage(nickname+" can't join in this groupchat");
+                        }
+                    }
+                    
+                }
+            }
+            for(int i=0;i<ServerTestoMultiThreaded.SocketList.size();i++)
+            {
+                if(!ServerTestoMultiThreaded.SocketList.get(i).Nickname.equals(Nickname) && ServerTestoMultiThreaded.SocketList.get(i).currentGroupChat.equals(currentGroupChat))
+                    {
+                        ServerTestoMultiThreaded.SocketList.get(i).sendMessage(Nickname+">"+line);
+                    }
+            }
+                        
+         }
+    }
+                
+    
+    
+    
+    public void sendMessage(String message)
+    {
+        out.println(message);
     }
 }
