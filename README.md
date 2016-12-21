@@ -37,13 +37,11 @@ java client-Testo localhost 1234
 Opensource.
 
 ##Patch Notes
-versione 1.1:
+versione 1.2:
 ```
--Aggiunta la possibilità di inserire il propio nickname
+-Aggiunta la diaconnessione dell' utente dalla chat tramite il comando ctrl+c
 ```
-```
--Aggiunta la possibilità di vedere la lista degli utenti connessi
-```
+
 
 
 ##Autori 
