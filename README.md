@@ -39,7 +39,7 @@ Opensource.
 ##Patch Notes
 versione 1.2:
 ```
--Aggiunta la diaconnessione dell' utente dalla chat tramite il comando ctrl+c
+-Aggiunta la disconnessione dell' utente dalla chat tramite il comando ctrl+c
 ```
 
 
